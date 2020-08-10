@@ -37,20 +37,20 @@ def send_info(message):
 @bot.message_handler(commands=['weather_help'])
 def send_info(message):
     bot.send_message(message.chat.id,
-                     'Напиши город в формате(Погода город Москва) и будет выдана информация о погоде:3',
+                     'Напиши город в формате(Погода Москва) и будет выдана информация о погоде:3',
                      reply_markup=keyboard_remove)
 
 
 @bot.message_handler(content_types=['text'])
 def send_text(message):
-    if message.text[:12].lower() == 'погода город':
+    if message.text[:6].lower() == 'погода':
 
         try:
             print(message)
-            weather = weather_mgr.weather_at_place(message.text[13:]).weather
+            weather = weather_mgr.weather_at_place(message.text[7:]).weather
             temp = weather.temperature('celsius')
             bot.send_message(message.chat.id,
-                             'Температура в городе ' + message.text[13:] + ' ' + str(temp['temp']) + str('°'))
+                             'Температура в городе ' + message.text[7:] + ' ' + str(temp['temp']) + str('°'))
         except APIRequestError:
             bot.send_message(message.chat.id, 'Город не найден:(')
         except NotFoundError:
