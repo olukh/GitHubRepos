@@ -1,4 +1,5 @@
 import telebot
+
 print('lol')
 print('main')
 from pyowm.commons.exceptions import APIRequestError, NotFoundError
@@ -13,22 +14,43 @@ owm = OWM(PYOWM_TOKEN)
 
 weather_mgr = owm.weather_manager()
 
+keyboard_help = telebot.types.ReplyKeyboardMarkup()
+keyboard_start = telebot.types.ReplyKeyboardMarkup()
 
-@bot.message_handler(commands=['start', 'help'])
+keyboard_remove = telebot.types.ReplyKeyboardRemove()
+
+keyboard_start.row('/help')
+keyboard_help.row('/weather_help')
+
+
+@bot.message_handler(commands=['start'])
 def send_info(message):
-    bot.send_message(message.chat.id, 'Напиши город в формате(Город Москва) и будет выдана информация о погоде:3')
+    bot.send_message(message.chat.id, 'больше информации в /help', reply_markup=keyboard_start)
+
+
+@bot.message_handler(commands=['help'])
+def send_info(message):
+    bot.send_message(message.chat.id, '/weather_help информация о выдаче погоды по названию города',
+                     reply_markup=keyboard_help)
+
+
+@bot.message_handler(commands=['weather_help'])
+def send_info(message):
+    bot.send_message(message.chat.id,
+                     'Напиши город в формате(Погода город Москва) и будет выдана информация о погоде:3',
+                     reply_markup=keyboard_remove)
 
 
 @bot.message_handler(content_types=['text'])
 def send_text(message):
-    if message.text[:6].lower() == 'город ':
+    if message.text[:12].lower() == 'погода город':
 
         try:
             print(message)
-            weather = weather_mgr.weather_at_place(message.text[6:]).weather
+            weather = weather_mgr.weather_at_place(message.text[13:]).weather
             temp = weather.temperature('celsius')
             bot.send_message(message.chat.id,
-                             'Температура в городе ' + message.text[6:] + ' ' + str(temp['temp']) + str('°'))
+                             'Температура в городе ' + message.text[13:] + ' ' + str(temp['temp']) + str('°'))
         except APIRequestError:
             bot.send_message(message.chat.id, 'Город не найден:(')
         except NotFoundError:
