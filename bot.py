@@ -1,5 +1,5 @@
 import telebot
-
+print('lol')
 from pyowm.commons.exceptions import APIRequestError, NotFoundError
 from pyowm.owm import OWM
 
