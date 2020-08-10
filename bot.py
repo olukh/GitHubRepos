@@ -2,7 +2,7 @@ import telebot
 
 from pyowm.commons.exceptions import APIRequestError, NotFoundError
 from pyowm.owm import OWM
-from pyowm.config import DEFAULT_CONFIG
+
 from config import TELEGRAM_TOKEN, PYOWM_TOKEN
 token=TELEGRAM_TOKEN
 
